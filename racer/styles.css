@@ -1,0 +1,17 @@
+#time {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display:block;
+}
+
+#speed {
+    position: absolute;
+    top: 500px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display:block;
+}
