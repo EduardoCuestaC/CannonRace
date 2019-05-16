@@ -315,7 +315,7 @@ function terminate() {
 			"    <div id=\"life\"></div>\n" +
 			"    <div id=\"points\"></div>\n" +
 			"    <div id=\"canvas\">\n" +
-			"        <script src=\"robotStart2.js\"> </script>\n" +
+			"        <script src=\"racerStart.js\"> </script>\n" +
 			"    </div>" +
 			"";
 
