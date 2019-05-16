@@ -1,4 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
 /*global THREE, Coordinates, document, window  */
 var camera, scene, renderer;
 var cameraControls;
@@ -62,15 +61,19 @@ class Obstacle {
 	constructor(x, y, z) {
 		this.root = new THREE.Group();
 		scene.add(this.root);
-		let material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
 		this.width = 10;
 		this.length = 10;
 		this.height = 20;
+
+		let material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), material);
+
 		this.root.add(box);
 		this.root.position.x = x;
 		this.root.position.y = y;
 		this.root.position.z = z;
+
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -81,6 +84,7 @@ class Obstacle {
 		let sleft = this.root.position.x - this.width / 2;
 		let stop = this.root.position.z - this.length / 2;
 		let sbot = this.root.position.z + this.length / 2;
+
 		return (sleft < racer.x + racer.width / 2)
 			&& (sright > racer.x - racer.width / 2)
 			&& (stop < racer.z + racer.length / 2)
@@ -91,33 +95,36 @@ class Obstacle {
 		this.root.position.x = Math.floor(Math.random() * 401) - 200;
 		this.root.position.y = 0;
 		this.root.position.z = z - 4000;
+
 		this.x = Math.floor(Math.random() * 401) - 200;
 		this.y = 0;
 		this.z = z - 4000;
 	}
 }
 
-
-
-
 class Racer {
 
 	constructor(x, y, z) {
 		this.root = new THREE.Group();
 		scene.add(this.root);
-		let materialShip = new THREE.MeshPhongMaterial({ color: 0x35ff3f });
+
 		this.width = 100;
 		this.height = 20;
 		this.length = 100;
+
+		let materialShip = new THREE.MeshPhongMaterial({ color: 0x35ff3f });
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
+
 		this.root.add(box);
 		this.root.position.y = 10;
 		this.root.position.x = x;
 		this.root.position.y = y;
 		this.root.position.z = z;
+
 		this.x = x;
 		this.y = y;
 		this.z = z;
+
 		this.speed = 10;
 		this.life = 100;
 		this.totalBoosts = 0;
@@ -127,6 +134,7 @@ class Racer {
 		this.root.position.x += x;
 		this.root.position.y += y;
 		this.root.position.z += z;
+
 		this.x += x;
 		this.y += y;
 		this.z += z;
@@ -135,12 +143,11 @@ class Racer {
 	moveForward() {
 		this.root.position.z -= this.speed;
 		this.z -= this.speed;
+
 		camera.position.z -= racer.speed;
 		plane.position.z -= racer.speed;
 	}
 }
-
-
 
 class HUD {
 	constructor(racer = null) {
@@ -168,6 +175,25 @@ class HUD {
 }
 
 function fillScene() {
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setResourcePath('/assets/');
+	mtlLoader.setPath('/assets/');
+	mtlLoader.load('u-wing.mtl', function (materials) {
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.load('/assets/u-wing.obj', function (object) {
+
+			object.position.x = 10
+			object.position.y = 10;
+			object.position.z = -4000;
+			scene.add(object);
+			console.log("loaded");
+		});
+
+	});
+
 	scene = new THREE.Scene();
 	scene.fog = new THREE.Fog(0x808080, 2000, 4000);
 
@@ -191,6 +217,7 @@ function fillScene() {
 
 	let planeGeometry = new THREE.PlaneGeometry(5000, 5000);
 	let planeMaterial = new THREE.MeshBasicMaterial({ color: 0x689bed });
+
 	plane = new THREE.Mesh(planeGeometry, planeMaterial);
 	plane.rotateX(-Math.PI / 2);
 	plane.position.z = -500;
@@ -239,7 +266,6 @@ function init() {
 	var canvasWidth = window.innerWidth;
 	var canvasHeight = window.innerHeight;
 	var canvasRatio = canvasWidth / canvasHeight;
-
 	// RENDERER
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 
