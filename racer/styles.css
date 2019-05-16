@@ -1,6 +1,26 @@
 #time {
     position: absolute;
     top: 10px;
+    left: 60px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display:block;
+}
+
+#points {
+    position: absolute;
+    top: 10px;
+    right: 60px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display:block;
+}
+
+#life {
+    position: absolute;
+    top: 30px;
     width: 100%;
     text-align: center;
     z-index: 100;
@@ -15,3 +35,20 @@
     z-index: 100;
     display:block;
 }
+
+.score-text {
+
+}
+
+.score-item {
+
+}
+
+.score-list {
+
+}
+
+.play-again-button {
+
+}
+

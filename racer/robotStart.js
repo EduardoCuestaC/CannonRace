@@ -5,12 +5,17 @@ var cameraControls;
 
 var clock = new THREE.Clock();
 var timer = 0;
-var root, groupChest, neck, head, hips, lHip, rHip, rKnee, lKnee, lAnkle, rAnkle, rShoulder, lShoulder, lElbow, rElbow, lWrist, rWrist;
 var racer;
 var kb = new KeyboardState();
 var boosts = [];
 var obstacles = [];
 var plane;
+var hud;
+
+var scores = [];
+
+var frameId;
+
 
 var Boost = function(x, y, z){
 	this.root = new THREE.Group();
@@ -39,6 +44,15 @@ Boost.prototype.intersects = function(racer){
 		&& (sright > racer.x - racer.width/2)
 		&& (stop < racer.z + racer.length/2)
 		&& (sbot > racer.z - racer.length/2);
+};
+
+Boost.prototype.relocate = function(z){
+	this.root.position.x = Math.floor(Math.random() * 401) - 200;
+	this.root.position.y = 0;
+	this.root.position.z = z - 4000;
+	this.x = Math.floor(Math.random() * 401) - 200;
+	this.y = 0;
+	this.z = z - 4000;
 };
 
 var Obstacle = function(x, y, z){
@@ -70,6 +84,15 @@ Obstacle.prototype.intersects = function(racer){
 		&& (sbot > racer.z - racer.length/2);
 };
 
+Obstacle.prototype.relocate = function(z){
+	this.root.position.x = Math.floor(Math.random() * 401) - 200;
+	this.root.position.y = 0;
+	this.root.position.z = z - 4000;
+	this.x = Math.floor(Math.random() * 401) - 200;
+	this.y = 0;
+	this.z = z - 4000;
+};
+
 
 var Racer = function(x, y, z){
 	this.root = new THREE.Group();
@@ -87,7 +110,9 @@ var Racer = function(x, y, z){
 	this.x = x;
 	this.y = y;
 	this.z = z;
-	this.speed = 2;
+	this.speed = 10;
+	this.life = 100;
+	this.totalBoosts = 0;
 };
 
 Racer.prototype.move = function(x, y, z){
@@ -105,6 +130,30 @@ Racer.prototype.moveForward = function() {
 	camera.position.z -= racer.speed;
 	plane.position.z -= racer.speed;
 };
+
+class HUD{
+	constructor(racer=null){
+		this.points = 0;
+		this.time = 0;
+		this.racer = racer;
+	}
+
+	get score(){
+		return this.points;
+	}
+	update(){
+		this.time = clock.getElapsedTime().toFixed(2);
+		this.points = Math.trunc(this.time/10) + this.racer.totalBoosts;
+		console.log(this.points,  Math.trunc(this.time/10), this.time);
+	}
+
+	render(){
+		document.getElementById("time").innerHTML = "Time (s): " + this.time;
+		document.getElementById("speed").innerHTML = "Speed: " + this.racer.speed;
+		document.getElementById("life").innerHTML = "Integrity: " + this.racer.life + "%";
+		document.getElementById("points").innerHTML = "Points: " + this.points;
+	}
+}
 
 function fillScene() {
 	scene = new THREE.Scene();
@@ -137,21 +186,27 @@ function fillScene() {
 
 
  racer = new Racer(0, 10, 0);
- boosts.push(new Boost(40, 0, -400));
- boosts.push(new Boost(20, 0, -800));
- boosts.push(new Boost(-30, 0, -1200));
- boosts.push(new Boost(0, 0, -1600));
- boosts.push(new Boost(50, 0, -2000));
- boosts.push(new Boost(-12, 0, -2400));
- boosts.push(new Boost(-50, 0, -2800));
+
+ boosts = [];
+
+ boosts.push(new Boost(40, 0, -800));
+ boosts.push(new Boost(20, 0, -1700));
+ boosts.push(new Boost(-30, 0, -2500));
+ boosts.push(new Boost(0, 0, -3800));
+
+ obstacles = [];
 
  obstacles.push(new Obstacle(0, 0, -600));
  obstacles.push(new Obstacle(10, 0, -1000));
- obstacles.push(new Obstacle(-20, 0, -1700));
- obstacles.push(new Obstacle(20, 0, -1700));
+ obstacles.push(new Obstacle(-20, 0, -1400));
  obstacles.push(new Obstacle(-10, 0, -2100));
+ obstacles.push(new Obstacle(0, 0, -2500));
+ obstacles.push(new Obstacle(100, 0, -2800));
+ obstacles.push(new Obstacle(50, 0, -3400));
+ obstacles.push(new Obstacle(-30, 0, -3800));
 
 
+ hud = new HUD(racer);
 /*	var loader = new THREE.FontLoader();
 
 	loader.load( 'helv.typeface.json', function ( font ) {
@@ -167,8 +222,6 @@ function fillScene() {
 		} );
 	} );*/
 }
-
-
 
 function init() {
 	var canvasWidth = window.innerWidth;
@@ -191,6 +244,52 @@ function init() {
 	cameraControls.target.set(0,100,0);
 
 	clock = new THREE.Clock()
+
+}
+
+function terminate(){
+	window.cancelAnimationFrame(frameId);
+	scores.push(hud.score);
+	scores.sort((a, b) => b - a);
+
+	var screen = document.getElementById('screen');
+	screen.innerHTML = "Last score: "+ hud.score+"<br>All scores:<br>";
+
+	let scoreList = document.createElement("ul");
+	scoreList.classList.add("score-list");
+	for(let score of scores){
+		let item = document.createElement("li");
+		item.textContent = score;
+		item.classList.add("score-item");
+		scoreList.appendChild(item);
+	}
+	screen.appendChild(scoreList);
+
+	let bplay = document.createElement("button");
+	bplay.innerText = "Play again";
+	bplay.onclick = function(){
+		screen.innerHTML = ""+
+			"<div id=\"time\"></div>\n" +
+			"    <div id=\"speed\"></div>\n" +
+			"    <div id=\"life\"></div>\n" +
+			"    <div id=\"points\"></div>\n" +
+			"    <div id=\"canvas\">\n" +
+			"        <script src=\"robotStart2.js\"> </script>\n" +
+			"    </div>" +
+		"";
+		try {
+			init();
+			fillScene();
+			addToDOM();
+			animate();
+		} catch(error) {
+			console.log("Your program encountered an unrecoverable error, can not draw on screen. Error was:");
+			console.log(error);
+		}
+
+	};
+	screen.appendChild(bplay);
+
 }
 
 function addToDOM() {
@@ -198,42 +297,57 @@ function addToDOM() {
     canvas.appendChild(renderer.domElement);
 }
 
+
 function animate() {
-	window.requestAnimationFrame(animate);
+	frameId = window.requestAnimationFrame(animate);
 	render();
 }
-var dangle, cangle = 0, cangle2 = 0, dangle2, timer2 = 0;
-var dgangle = 0, cgangle = 0;
+
 function render() {
 	kb.update();
 	var delta = clock.getDelta();
 	racer.moveForward();
 
 	if(kb.pressed("A"))
-		racer.move(-2, 0, 0);
+		if(racer.x > -200)
+			racer.move(-2, 0, 0);
 	if(kb.pressed("D"))
-		racer.move(2, 0, 0);
-	if(kb.pressed("W")) {
-	}
+		if(racer.x < 200)
+			racer.move(2, 0, 0);
 
 	for(let boost of boosts){
 		if(boost.intersects(racer)){
-			racer.speed += 1;
-			console.log(1)
+			if(racer.speed < 50){
+				racer.speed += 5;
+			}
+			racer.totalBoosts++;
+			boost.relocate(racer.z)
+		}
+
+		if(boost.z > (racer.z + 400)){
+				boost.relocate(racer.z)
 		}
 	}
 
 	for(let obstacle of obstacles){
 		if(obstacle.intersects(racer)){
-			racer.speed = Math.max(1, racer.speed - 1);
-			console.log(-1)
+			racer.speed = Math.max(5, racer.speed - 10);
+			obstacle.relocate(racer.z);
+			racer.life -= 10;
+			if(racer.life <= 0){
+				terminate();
+			}
+		}
+
+		if(obstacle.z > (racer.z + 400)){
+				obstacle.relocate(racer.z)
 		}
 	}
 	cameraControls.target.set(0, 10, racer.z);
 	cameraControls.update(delta);
 	renderer.render(scene, camera);
-	document.getElementById("time").innerHTML = "Time (s): " + clock.getElapsedTime().toFixed(2);
-	document.getElementById("speed").innerHTML = "Speed: " + racer.speed;
+	hud.update();
+	hud.render();
 }
 
 try {
