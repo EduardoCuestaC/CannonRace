@@ -151,7 +151,6 @@ var fly = new soundloop("assets/sounds/fly.mp3");
 var background = new soundloop("assets/sounds/soundtrack.mp3")
 var gameover = new soundloop("assets/sounds/gameover.mp3");
 var death = new sound("assets/sounds/death.mp3");
-var intro = new soundloop("assets/sounds/intro.mp3");
 
 class Racer {
 
@@ -224,50 +223,6 @@ class HUD {
 		document.getElementById("life").innerHTML = "Hull Integrity: " + this.racer.life + "%";
 		document.getElementById("points").innerHTML = "Points: " + this.points;
 	}
-}
-
-function start() {
-	// Play intro
-	intro.play();
-
-	window.cancelAnimationFrame(frameId);
-
-	var body = document.body;
-	body.style.backgroundImage = "url('assets/intro2.jpg')";
-	let wr = document.createElement("div");
-
-	let startbutton = document.createElement("button");
-	startbutton.innerText = "Begin";
-	startbutton.classList.add("play-again-button");
-
-	var screen = document.getElementById('screen');
-	screen.innerHTML = "";
-
-	startbutton.onclick = function () {
-		screen.innerHTML = "" +
-			"<div class=\"score-text\" id=\"time\"></div>\n" +
-			"    <div class=\"score-text\" id=\"speed\"></div>\n" +
-			"    <div class=\"score-text\" id=\"life\"></div>\n" +
-			"    <div class=\"score-text\" id=\"points\"></div>\n" +
-			"    <div id=\"canvas\">\n" +
-			"        <script src=\"racerStart.js\"> </script>\n" +
-			"    </div>" +
-			"";
-
-		try {
-			init();
-			fillScene();
-			addToDOM();
-			animate();
-
-		} catch (error) {
-			console.log("Your program encountered an unrecoverable error, can not draw on screen. Error was:");
-			console.log(error);
-		}
-
-	};
-
-	wr.appendChild(startbutton);
 }
 
 function init() {
@@ -462,10 +417,6 @@ function render() {
 }
 
 function terminate() {
-	// Set background image
-	var body = document.body;
-	body.style.backgroundImage = "url('assets/end.jpg')";
-
 	// Stop soundtrack
 	background.stop();
 	fly.stop();
@@ -540,12 +491,11 @@ function terminate() {
 }
 
 try {
-	start();
 	init();
 	fillScene();
 	addToDOM();
 	animate();
-	
+
 } catch (error) {
 	console.log("Your program encountered an unrecoverable error, can not draw on canvas. Error was:");
 	console.log(error);

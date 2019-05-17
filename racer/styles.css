@@ -13,7 +13,7 @@
     width: 100%;
     text-align: center;
     z-index: 100;
-    display:block;
+    display: block;
 }
 
 #points {
@@ -23,7 +23,7 @@
     width: 100%;
     text-align: center;
     z-index: 100;
-    display:block;
+    display: block;
 }
 
 #life {
@@ -32,7 +32,7 @@
     width: 100%;
     text-align: center;
     z-index: 100;
-    display:block;
+    display: block;
 }
 
 #speed {
@@ -41,7 +41,7 @@
     width: 100%;
     text-align: center;
     z-index: 100;
-    display:block;
+    display: block;
 }
 
 .score-text {
@@ -74,21 +74,54 @@
     font-size: 30px;
     color: #d6ffdf;
     background-color: black;
-    border:none;
+    border: none;
     padding: 20px 20px 20px 20px;
     text-align: center;
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
 }
 
 .play-again-button:hover {
-    background-color:blue;
+    background-color: blue;
 }
 
 body {
     background-image: url("assets/background.jpg");
 }
 
+.html-bg {
+    background: url(assets/title.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .score-wrapper {
     margin-top: 200px;
     text-align: center;
+}
+
+.img-bg {
+    /* Set rules to fill background */
+    min-height: 100%;
+    min-width: 1024px;
+
+    /* Set up proportionate scaling */
+    width: 100%;
+    height: auto;
+
+    /* Set up positioning */
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+@media screen and (max-width: 1024px) {
+
+    /* Specific to this particular image */
+    .img-bg {
+        left: 50%;
+        margin-left: -512px;
+        /* 50% */
+    }
 }
