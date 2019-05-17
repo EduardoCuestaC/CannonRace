@@ -8,24 +8,66 @@ var racer;
 var kb = new KeyboardState();
 var boosts = [];
 var obstacles = [];
-var ship;
+var plane;
 var hud;
-var objetito;
+var ship;
 var scores = [];
-
 var frameId;
 
+class sound {
+	constructor(src) {
+		this.sound = document.createElement("audio");
+		this.sound.src = src;
+		this.sound.setAttribute("preload", "auto");
+		this.sound.setAttribute("controls", "none");
+		this.sound.style.display = "none";
+
+		document.body.appendChild(this.sound);
+
+		this.play = function () {
+			this.sound.play();
+		};
+
+		this.stop = function () {
+			this.sound.pause();
+		};
+	}
+}
+
+class soundloop {
+	constructor(src) {
+		this.sound = document.createElement("audio");
+		this.sound.src = src;
+		this.sound.setAttribute("preload", "auto");
+		this.sound.setAttribute("controls", "none");
+		this.sound.setAttribute("loop", "true");
+		this.sound.style.display = "none";
+
+		document.body.appendChild(this.sound);
+
+		this.play = function () {
+			this.sound.play();
+		};
+
+		this.stop = function () {
+			this.sound.pause();
+		};
+	}
+}
 
 class Boost {
 
 	constructor(x, y, z) {
 		this.root = new THREE.Group();
 		scene.add(this.root);
-		let materialShip = new THREE.MeshPhongMaterial({ color: 0x222222 });
-		this.width = 70;
+
+		this.width = 90;
 		this.length = 40;
 		this.height = 2;
+
+		let materialShip = new THREE.MeshPhongMaterial({ color: 0x222222 });
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
+
 		this.root.add(box);
 		this.root.position.x = x;
 		this.root.position.y = y;
@@ -102,6 +144,15 @@ class Obstacle {
 	}
 }
 
+// Initilizes sounds
+var crash = new sound("assets/sounds/crash.mp3");
+var speedup = new sound("assets/sounds/boost.mp3");
+var fly = new soundloop("assets/sounds/fly.mp3");
+var background = new soundloop("assets/sounds/soundtrack.mp3")
+var gameover = new soundloop("assets/sounds/gameover.mp3");
+var death = new sound("assets/sounds/death.mp3");
+var intro = new soundloop("assets/sounds/intro.mp3");
+
 class Racer {
 
 	constructor(x, y, z) {
@@ -146,7 +197,7 @@ class Racer {
 		this.z -= this.speed;
 
 		camera.position.z -= racer.speed;
-		ship.position.z -= racer.speed;
+		plane.position.z -= racer.speed;
 	}
 }
 
@@ -175,13 +226,84 @@ class HUD {
 	}
 }
 
+function start() {
+	// Play intro
+	intro.play();
+
+	window.cancelAnimationFrame(frameId);
+
+	var body = document.body;
+	body.style.backgroundImage = "url('assets/intro2.jpg')";
+	let wr = document.createElement("div");
+
+	let startbutton = document.createElement("button");
+	startbutton.innerText = "Begin";
+	startbutton.classList.add("play-again-button");
+
+	var screen = document.getElementById('screen');
+	screen.innerHTML = "";
+
+	startbutton.onclick = function () {
+		screen.innerHTML = "" +
+			"<div class=\"score-text\" id=\"time\"></div>\n" +
+			"    <div class=\"score-text\" id=\"speed\"></div>\n" +
+			"    <div class=\"score-text\" id=\"life\"></div>\n" +
+			"    <div class=\"score-text\" id=\"points\"></div>\n" +
+			"    <div id=\"canvas\">\n" +
+			"        <script src=\"racerStart.js\"> </script>\n" +
+			"    </div>" +
+			"";
+
+		try {
+			init();
+			fillScene();
+			addToDOM();
+			animate();
+
+		} catch (error) {
+			console.log("Your program encountered an unrecoverable error, can not draw on screen. Error was:");
+			console.log(error);
+		}
+
+	};
+
+	wr.appendChild(startbutton);
+}
+
+function init() {
+	// Stop intro music
+	intro.stop();
+
+	var canvasWidth = window.innerWidth;
+	var canvasHeight = window.innerHeight;
+	var canvasRatio = canvasWidth / canvasHeight;
+
+	// RENDERER
+	renderer = new THREE.WebGLRenderer({ antialias: true });
+
+	renderer.gammaInput = true;
+	renderer.gammaOutput = true;
+	renderer.setSize(canvasWidth, canvasHeight);
+	renderer.setClearColor(0xAAAAAA, 1.0);
+
+	// CAMERA
+	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 4000);
+	// CONTROLS
+	cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+	camera.position.set(0, 100, +500);
+	cameraControls.target.set(0, 100, 0);
+
+	clock = new THREE.Clock()
+
+}
+
 function fillScene() {
 
+	// FOG
 	scene = new THREE.Scene();
 	scene.fog = new THREE.Fog(0x808080, 2000, 4000);
 
 	// LIGHTS
-
 	scene.add(new THREE.AmbientLight(0x222222));
 
 	var light = new THREE.DirectionalLight(0xffffff, 0.7);
@@ -192,11 +314,11 @@ function fillScene() {
 	light = new THREE.DirectionalLight(0xffffff, 0.9);
 	light.position.set(-200, -100, -400);
 
-	scene.add(light);
+	// SOUNDS
+	fly.play();
+	background.play();
 
-	/*//grid xz
-	var gridXZ = new THREE.GridHelper(2000, 100, new THREE.Color(0xCCCCCC), new THREE.Color(0x888888));
-	scene.add(gridXZ);*/
+	scene.add(light);
 
 	// Spaceship model load
 	var mtlLoader = new THREE.MTLLoader();
@@ -216,20 +338,20 @@ function fillScene() {
 			object.scale.y = 30;
 			object.scale.z = 30;
 			object.rotation.y = Math.PI * -1;
-			objetito = object;
+			ship = object;
 			scene.add(object);
 			console.log("loaded");
 		});
 
 	});
 
-	let shipGeometry = new THREE.shipGeometry(5000, 5000);
+	let shipGeometry = new THREE.PlaneGeometry(5000, 5000);
 	let shipMaterial = new THREE.MeshBasicMaterial({ color: 0x689bed });
 
-	ship = new THREE.Mesh(shipGeometry, shipMaterial);
-	ship.rotateX(-Math.PI / 2);
-	ship.position.z = -500;
-	scene.add(ship);
+	plane = new THREE.Mesh(shipGeometry, shipMaterial);
+	plane.rotateX(-Math.PI / 2);
+	plane.position.z = -500;
+	scene.add(plane);
 
 
 	racer = new Racer(0, 10, 0);
@@ -270,30 +392,87 @@ function fillScene() {
 		} );*/
 }
 
-function init() {
-	var canvasWidth = window.innerWidth;
-	var canvasHeight = window.innerHeight;
-	var canvasRatio = canvasWidth / canvasHeight;
-	// RENDERER
-	renderer = new THREE.WebGLRenderer({ antialias: true });
+function addToDOM() {
+	var canvas = document.getElementById('canvas');
+	canvas.appendChild(renderer.domElement);
+}
 
-	renderer.gammaInput = true;
-	renderer.gammaOutput = true;
-	renderer.setSize(canvasWidth, canvasHeight);
-	renderer.setClearColor(0xAAAAAA, 1.0);
+function animate() {
+	frameId = window.requestAnimationFrame(animate);
+	render();
+}
 
-	// CAMERA
-	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 4000);
-	// CONTROLS
-	cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-	camera.position.set(0, 100, +500);
-	cameraControls.target.set(0, 100, 0);
+function render() {
+	kb.update();
+	var delta = clock.getDelta();
+	racer.moveForward();
 
-	clock = new THREE.Clock()
+	ship.position.x = racer.x;
+	ship.position.z = racer.z;
+	ship.position.y = racer.y;
 
+	if (kb.pressed("A"))
+		if (racer.x > -200)
+			racer.move(-6, 0, 0);
+
+	if (kb.pressed("D"))
+		if (racer.x < 200)
+			racer.move(6, 0, 0);
+
+	for (let boost of boosts) {
+		if (boost.intersects(racer)) {
+
+			speedup.play();
+			if (racer.speed < 70) {
+				racer.speed += 5;
+			}
+			racer.totalBoosts++;
+			boost.relocate(racer.z)
+		}
+
+		if (boost.z > (racer.z + 400)) {
+			boost.relocate(racer.z)
+		}
+	}
+
+	for (let obstacle of obstacles) {
+		if (obstacle.intersects(racer)) {
+
+			crash.play();
+			racer.speed = Math.max(5, racer.speed - 10);
+			obstacle.relocate(racer.z);
+			racer.life -= 10;
+
+			if (racer.life <= 0) {
+				death.play();
+				terminate();
+			}
+		}
+
+		if (obstacle.z > (racer.z + 400)) {
+			obstacle.relocate(racer.z)
+		}
+	}
+
+	cameraControls.target.set(0, 10, racer.z);
+	cameraControls.update(delta);
+	renderer.render(scene, camera);
+	hud.update();
+	hud.render();
 }
 
 function terminate() {
+	// Set background image
+	var body = document.body;
+	body.style.backgroundImage = "url('assets/end.jpg')";
+
+	// Stop soundtrack
+	background.stop();
+	fly.stop();
+
+	// Play gameover
+	gameover.play();
+
 	window.cancelAnimationFrame(frameId);
 	scores.push(hud.score);
 	scores.sort((a, b) => b - a);
@@ -316,8 +495,6 @@ function terminate() {
 	listHead.classList.add("score-text");
 	wr.appendChild(listHead);
 
-
-
 	let scoreList = document.createElement("ul");
 	scoreList.classList.add("score-list");
 
@@ -329,8 +506,6 @@ function terminate() {
 	}
 
 	wr.appendChild(scoreList);
-
-
 
 	let bplay = document.createElement("button");
 	bplay.innerText = "Play again";
@@ -348,10 +523,12 @@ function terminate() {
 			"";
 
 		try {
+
 			init();
 			fillScene();
 			addToDOM();
 			animate();
+
 		} catch (error) {
 			console.log("Your program encountered an unrecoverable error, can not draw on screen. Error was:");
 			console.log(error);
@@ -360,76 +537,15 @@ function terminate() {
 	};
 
 	wr.appendChild(bplay);
-
-}
-
-function addToDOM() {
-	var canvas = document.getElementById('canvas');
-	canvas.appendChild(renderer.domElement);
-}
-
-function animate() {
-	frameId = window.requestAnimationFrame(animate);
-	render();
-}
-
-function render() {
-	kb.update();
-	var delta = clock.getDelta();
-	racer.moveForward();
-
-	objetito.position.x = racer.x;
-	objetito.position.z = racer.z;
-	objetito.position.y = racer.y;
-
-	if (kb.pressed("A"))
-		if (racer.x > -200)
-			racer.move(-6, 0, 0);
-
-	if (kb.pressed("D"))
-		if (racer.x < 200)
-			racer.move(6, 0, 0);
-
-	for (let boost of boosts) {
-		if (boost.intersects(racer)) {
-			if (racer.speed < 50) {
-				racer.speed += 5;
-			}
-			racer.totalBoosts++;
-			boost.relocate(racer.z)
-		}
-
-		if (boost.z > (racer.z + 400)) {
-			boost.relocate(racer.z)
-		}
-	}
-
-	for (let obstacle of obstacles) {
-		if (obstacle.intersects(racer)) {
-			racer.speed = Math.max(5, racer.speed - 10);
-			obstacle.relocate(racer.z);
-			racer.life -= 10;
-			if (racer.life <= 0) {
-				terminate();
-			}
-		}
-
-		if (obstacle.z > (racer.z + 400)) {
-			obstacle.relocate(racer.z)
-		}
-	}
-	cameraControls.target.set(0, 10, racer.z);
-	cameraControls.update(delta);
-	renderer.render(scene, camera);
-	hud.update();
-	hud.render();
 }
 
 try {
+	start();
 	init();
 	fillScene();
 	addToDOM();
 	animate();
+	
 } catch (error) {
 	console.log("Your program encountered an unrecoverable error, can not draw on canvas. Error was:");
 	console.log(error);

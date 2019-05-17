@@ -1,33 +1,35 @@
 <html>
-  <head>
-    <title>Space Race!</title>
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
-    <style type="text/css">
-    </style>
-    <script src="js/jquery-1.11.3.min.js"></script>
-    <script src="js/three.min.js"></script>
-    <script src="js/Detector.js"></script>
-    <script src="js/CanvasRenderer.js"></script>
-    <script src="js/Projector.js"></script>
-    <script src="js/OrbitControls.js"></script>
-    <script src="js/LoaderUtils.js" type="module"></script>
-    <script src="js/OBJLoader.js"></script>
-    <script src="js/MTLLoader.js"></script>
-    <script src="js/dat.gui.min.js"></script>
-    <script src="js/KeyboardState.js"></script>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link href="https://fonts.googleapis.com/css?family=Space+Mono&display=swap" rel="stylesheet">
-  </head>
 
-  <body>
+<head>
+  <title>Space Race!</title>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <style type="text/css">
+  </style>
+  <script src="js/jquery-1.11.3.min.js"></script>
+  <script src="js/three.min.js"></script>
+  <script src="js/Detector.js"></script>
+  <script src="js/CanvasRenderer.js"></script>
+  <script src="js/Projector.js"></script>
+  <script src="js/OrbitControls.js"></script>
+  <script src="js/LoaderUtils.js" type="module"></script>
+  <script src="js/OBJLoader.js"></script>
+  <script src="js/MTLLoader.js"></script>
+  <script src="js/dat.gui.min.js"></script>
+  <script src="js/KeyboardState.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Space+Mono&display=swap" rel="stylesheet">
+</head>
+
+<body id="wallpaper">
   <div id="screen">
     <div class="glow score-text" id="time"></div>
     <div class="glow score-text" id="speed" style="margin-top: 10%"></div>
     <div class="glow score-text" id="life"></div>
     <div class="glow score-text" id="points"></div>
     <div id="canvas">
-        <script src="raceStart.js"> </script>
+      <script src="raceStart.js"> </script>
     </div>
   </div>
 </body>
+
 </html>
