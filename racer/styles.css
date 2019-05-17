@@ -80,21 +80,26 @@
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
 }
 
+.play-again-btn {
+    margin-left: 2%;
+    background-image: linear-gradient(to right, #3b0aad 0%, #61c2e9 51%, #3b0aad 100%);
+    background-color: #61c2e9;
+    color: white;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
+    font-size: 400%;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 .play-again-button:hover {
-    background-color: blue;
+    background-color: #d418d4;
 }
 
-body {
-    background-image: url("assets/background.jpg");
-}
-
-.html-bg {
-    background: url(assets/title.png) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
+/* body {
+    background-image: url("assets/end.jpg");
+} */
 
 .score-wrapper {
     margin-top: 200px;
@@ -141,7 +146,7 @@ body {
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     background-image: linear-gradient(to right, #3b0aad 0%, #d418d4 51%, #3b0aad 100%);
-    background-color: #f725f7;
+    background-color: #d418d4;
     color: white;
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
     font-size: 400%;

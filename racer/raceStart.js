@@ -343,6 +343,7 @@ function terminate() {
 	scores.push(hud.score);
 	scores.sort((a, b) => b - a);
 
+	document.body.style.backgroundImage = 'url("assets/end.jpg")';
 	var screen = document.getElementById('screen');
 	screen.innerHTML = "";
 
@@ -373,8 +374,8 @@ function terminate() {
 	wr.appendChild(scoreList);
 
 	let bplay = document.createElement("button");
-	bplay.innerText = "Play again";
-	bplay.classList.add("play-again-button");
+	bplay.innerText = "Play Again";
+	bplay.classList.add("play-again-btn");
 
 	bplay.onclick = function () {
 		screen.innerHTML = "" +
