@@ -233,6 +233,7 @@ function fillScene() {
 	// FOG
 	scene = new THREE.Scene();
 	scene.fog = new THREE.Fog(0x808080, 2000, 4000);
+	scene.background = new THREE.Color( 0x000000 );
 
 	// LIGHTS
 	scene.add(new THREE.AmbientLight(0x222222));
@@ -381,7 +382,7 @@ function fillScene() {
 	plane = new THREE.Mesh(shipGeometry, shipMaterial);
 	plane.rotateX(-Math.PI / 2);
 	plane.position.z = -500;
-	scene.add(plane);
+	//scene.add(plane);
 
 
 	racer = new Racer(0, 10, 0);
