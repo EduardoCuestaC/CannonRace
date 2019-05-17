@@ -93,10 +93,10 @@ class Boost {
 		var x = Math.floor(Math.random() * 401) - 200;
 		this.root.position.x = x;
 		this.root.position.y = 0;
-		this.root.position.z = z - 4000;
+		this.root.position.z = z - 5000;
 		this.x = x;
 		this.y = 0;
-		this.z = z - 4000;
+		this.z = z - 5000;
 	}
 }
 
@@ -106,13 +106,13 @@ class Obstacle {
 		this.root = new THREE.Group();
 		scene.add(this.root);
 
-		this.width = 10;
+		this.width = 6;
 		this.length = 10;
 		this.height = 20;
 
 		let material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 		material.visible = false;
-		let box = new THREE.Mesh(new THREE.SphereGeometry( 20, 50, 50 ), material);
+		let box = new THREE.Mesh(new THREE.SphereGeometry( 10, 50, 50 ), material);
 
 		this.root.add(box);
 		this.root.position.x = x;
@@ -137,13 +137,13 @@ class Obstacle {
 	}
 
 	relocate(z) {
-		var x = Math.floor(Math.random() * 401) - 200;
+		var x = Math.floor(Math.random() * 801) - 50;
 		this.root.position.x = x;
 		this.root.position.y = 0;
-		this.root.position.z = z - 4000;
+		this.root.position.z = z - 5000;
 		this.x = x;
 		this.y = 0;
-		this.z = z - 4000;
+		this.z = z - 5000;
 	}
 }
 
@@ -161,15 +161,13 @@ class Racer {
 		this.root = new THREE.Group();
 		scene.add(this.root);
 
-		this.width = 120;
+		this.width = 50;
 		this.height = 10;
 		this.length = 200;
 
 		let materialShip = new THREE.MeshPhongMaterial({ color: 0xd2d8e0 });
 		materialShip.visible = true;
-		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
 
-		//this.root.add(box);
 		this.root.position.y = 10;
 		this.root.position.x = x;
 		this.root.position.y = y;
@@ -185,11 +183,11 @@ class Racer {
 	}
 
 	move(x, y, z) {
-		this.root.position.x += x;
+		this.root.position.x += (x + speed / 5);
 		this.root.position.y += y;
 		this.root.position.z += z;
 
-		this.x += x;
+		this.x += (x + speed / 5);
 		this.y += y;
 		this.z += z;
 	}
@@ -217,7 +215,6 @@ class HUD {
 	update() {
 		this.time = clock.getElapsedTime().toFixed(2);
 		this.points = Math.trunc(this.time / 10) + this.racer.totalBoosts;
-		// console.log(this.points, Math.trunc(this.time / 10), this.time);
 	}
 
 	render() {
