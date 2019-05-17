@@ -108,12 +108,12 @@ class Racer {
 		this.root = new THREE.Group();
 		scene.add(this.root);
 
-		this.width = 100;
-		this.height = 20;
-		this.length = 100;
+		this.width = 50;
+		this.height = 10;
+		this.length = 180;
 
-		let materialShip = new THREE.MeshPhongMaterial({ color: 0x35ff3f });
-		materialShip.transparent = true;
+		let materialShip = new THREE.MeshPhongMaterial({ color: 0xd2d8e0 });
+		materialShip.visible = false;
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
 
 		//this.root.add(box);
@@ -200,14 +200,14 @@ function fillScene() {
 
 	// Spaceship model load
 	var mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setResourcePath('assets/');
-	mtlLoader.setPath('assets/');
+	mtlLoader.setResourcePath('assets/ships/');
+	mtlLoader.setPath('assets/ships/');
 	mtlLoader.load('u-wing_textured.mtl', function (materials) {
 		materials.preload();
 
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials(materials);
-		objLoader.load('assets/u-wing_textured.obj', function (object) {
+		objLoader.load('assets/ships/u-wing_textured.obj', function (object) {
 
 			object.position.x = 10
 			object.position.y = 10;
@@ -384,11 +384,11 @@ function render() {
 
 	if (kb.pressed("A"))
 		if (racer.x > -200)
-			racer.move(-2, 0, 0);
+			racer.move(-6, 0, 0);
 
 	if (kb.pressed("D"))
 		if (racer.x < 200)
-			racer.move(2, 0, 0);
+			racer.move(6, 0, 0);
 
 	for (let boost of boosts) {
 		if (boost.intersects(racer)) {
