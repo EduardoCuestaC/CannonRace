@@ -408,6 +408,8 @@ function fillScene() {
 
 function init() {
 
+	document.getElementsByTagName("body")[0].style.backgroundImage = "url('assets/background.jpg')";
+
 	var canvasWidth = window.innerWidth;
 	var canvasHeight = window.innerHeight;
 	var canvasRatio = canvasWidth / canvasHeight;
@@ -418,7 +420,6 @@ function init() {
 	renderer.gammaInput = true;
 	renderer.gammaOutput = true;
 	renderer.setSize(canvasWidth, canvasHeight);
-	//renderer.setClearColor(0xAAAAAA, 1.0);
 
 	// CAMERA
 	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 4000);
