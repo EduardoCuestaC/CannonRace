@@ -10,7 +10,7 @@ var boosts = [];
 var obstacles = [];
 var plane;
 var hud;
-
+var objetito;
 var scores = [];
 
 var frameId;
@@ -113,6 +113,7 @@ class Racer {
 		this.length = 100;
 
 		let materialShip = new THREE.MeshPhongMaterial({ color: 0x35ff3f });
+		materialShip.transparent = true;
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
 
 		this.root.add(box);
@@ -163,7 +164,7 @@ class HUD {
 	update() {
 		this.time = clock.getElapsedTime().toFixed(2);
 		this.points = Math.trunc(this.time / 10) + this.racer.totalBoosts;
-		console.log(this.points, Math.trunc(this.time / 10), this.time);
+		// console.log(this.points, Math.trunc(this.time / 10), this.time);
 	}
 
 	render() {
@@ -199,18 +200,23 @@ function fillScene() {
 
 	// Spaceship model load
 	var mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setResourcePath('/assets/');
-	mtlLoader.setPath('/assets/');
-	mtlLoader.load('u-wing.mtl', function (materials) {
+	mtlLoader.setResourcePath('assets/');
+	mtlLoader.setPath('assets/');
+	mtlLoader.load('u-wing_textured.mtl', function (materials) {
 		materials.preload();
 
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials(materials);
-		objLoader.load('/assets/u-wing.obj', function (object) {
+		objLoader.load('assets/u-wing_textured.obj', function (object) {
 
 			object.position.x = 10
 			object.position.y = 10;
-			object.position.z = -4000;
+			object.position.z = 0;
+			object.scale.x = 30;
+			object.scale.y = 30;
+			object.scale.z = 30;
+			object.rotation.y = Math.PI * -1;
+			objetito = object;
 			scene.add(object);
 			console.log("loaded");
 		});
@@ -249,7 +255,7 @@ function fillScene() {
 
 	hud = new HUD(racer);
 	/*	var loader = new THREE.FontLoader();
-	
+
 		loader.load( 'helv.typeface.json', function ( font ) {
 			var geometry = new THREE.TextGeometry( 'Hello three.js!', {
 				font: font,
@@ -352,9 +358,14 @@ function render() {
 	var delta = clock.getDelta();
 	racer.moveForward();
 
+	objetito.position.x = racer.x;
+	objetito.position.z = racer.z;
+	objetito.position.y = racer.y;
+
 	if (kb.pressed("A"))
 		if (racer.x > -200)
 			racer.move(-2, 0, 0);
+
 	if (kb.pressed("D"))
 		if (racer.x < 200)
 			racer.move(2, 0, 0);
