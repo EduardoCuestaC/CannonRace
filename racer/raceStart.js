@@ -175,24 +175,6 @@ class HUD {
 }
 
 function fillScene() {
-	var mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setResourcePath('/assets/');
-	mtlLoader.setPath('/assets/');
-	mtlLoader.load('u-wing.mtl', function (materials) {
-		materials.preload();
-
-		var objLoader = new THREE.OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.load('/assets/u-wing.obj', function (object) {
-
-			object.position.x = 10
-			object.position.y = 10;
-			object.position.z = -4000;
-			scene.add(object);
-			console.log("loaded");
-		});
-
-	});
 
 	scene = new THREE.Scene();
 	scene.fog = new THREE.Fog(0x808080, 2000, 4000);
@@ -212,8 +194,28 @@ function fillScene() {
 	scene.add(light);
 
 	/*//grid xz
-	 var gridXZ = new THREE.GridHelper(2000, 100, new THREE.Color(0xCCCCCC), new THREE.Color(0x888888));
-	 scene.add(gridXZ);*/
+	var gridXZ = new THREE.GridHelper(2000, 100, new THREE.Color(0xCCCCCC), new THREE.Color(0x888888));
+	scene.add(gridXZ);*/
+
+	// Spaceship model load
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setResourcePath('/assets/');
+	mtlLoader.setPath('/assets/');
+	mtlLoader.load('u-wing.mtl', function (materials) {
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.load('/assets/u-wing.obj', function (object) {
+
+			object.position.x = 10
+			object.position.y = 10;
+			object.position.z = -4000;
+			scene.add(object);
+			console.log("loaded");
+		});
+
+	});
 
 	let planeGeometry = new THREE.PlaneGeometry(5000, 5000);
 	let planeMaterial = new THREE.MeshBasicMaterial({ color: 0x689bed });
