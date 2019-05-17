@@ -116,7 +116,7 @@ class Racer {
 		materialShip.transparent = true;
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
 
-		this.root.add(box);
+		//this.root.add(box);
 		this.root.position.y = 10;
 		this.root.position.x = x;
 		this.root.position.y = y;
@@ -299,7 +299,24 @@ function terminate() {
 	scores.sort((a, b) => b - a);
 
 	var screen = document.getElementById('screen');
-	screen.innerHTML = "Last score: " + hud.score + "<br>All scores:<br>";
+	screen.innerHTML = "";
+
+	let wr = document.createElement("div");
+	wr.classList.add("score-wrapper");
+	screen.appendChild(wr);
+
+	let txt = document.createElement("div");
+	txt.innerText = "Last score: " + hud.score;
+	txt.classList.add("score-text");
+	wr.appendChild(txt);
+
+
+	let listHead = document.createElement("div");
+	listHead.innerText = "All scores:";
+	listHead.classList.add("score-text");
+	wr.appendChild(listHead);
+
+
 
 	let scoreList = document.createElement("ul");
 	scoreList.classList.add("score-list");
@@ -311,17 +328,20 @@ function terminate() {
 		scoreList.appendChild(item);
 	}
 
-	screen.appendChild(scoreList);
+	wr.appendChild(scoreList);
+
+
 
 	let bplay = document.createElement("button");
 	bplay.innerText = "Play again";
+	bplay.classList.add("play-again-button");
 
 	bplay.onclick = function () {
 		screen.innerHTML = "" +
-			"<div id=\"time\"></div>\n" +
-			"    <div id=\"speed\"></div>\n" +
-			"    <div id=\"life\"></div>\n" +
-			"    <div id=\"points\"></div>\n" +
+			"<div class=\"score-text\" id=\"time\"></div>\n" +
+			"    <div class=\"score-text\" id=\"speed\"></div>\n" +
+			"    <div class=\"score-text\" id=\"life\"></div>\n" +
+			"    <div class=\"score-text\" id=\"points\"></div>\n" +
 			"    <div id=\"canvas\">\n" +
 			"        <script src=\"racerStart.js\"> </script>\n" +
 			"    </div>" +
@@ -339,7 +359,7 @@ function terminate() {
 
 	};
 
-	screen.appendChild(bplay);
+	wr.appendChild(bplay);
 
 }
 

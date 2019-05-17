@@ -1,7 +1,15 @@
+.glow {
+    font-size: 30px;
+    color: #d6ffdf;
+    text-align: center;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
+}
+
+
 #time {
     position: absolute;
     top: 10px;
-    left: 60px;
+    left: 150px;
     width: 100%;
     text-align: center;
     z-index: 100;
@@ -11,7 +19,7 @@
 #points {
     position: absolute;
     top: 10px;
-    right: 60px;
+    right: 150px;
     width: 100%;
     text-align: center;
     z-index: 100;
@@ -20,7 +28,7 @@
 
 #life {
     position: absolute;
-    top: 30px;
+    top: 50px;
     width: 100%;
     text-align: center;
     z-index: 100;
@@ -37,18 +45,50 @@
 }
 
 .score-text {
-
+    font-family: 'Space Mono', monospace;
+    font-size: 30px;
+    color: #d6ffdf;
+    text-align: center;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
 }
 
 .score-item {
-
+    font-family: 'Space Mono', monospace;
+    font-size: 30px;
+    color: #d6ffdf;
+    text-align: center;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
 }
 
 .score-list {
-
+    font-family: 'Space Mono', monospace;
+    font-size: 30px;
+    color: #d6ffdf;
+    list-style-type: none;
+    text-align: center;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
 }
 
 .play-again-button {
-
+    font-family: 'Space Mono', monospace;
+    font-size: 30px;
+    color: #d6ffdf;
+    background-color: black;
+    border:none;
+    padding: 20px 20px 20px 20px;
+    text-align: center;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #55db72;
 }
 
+.play-again-button:hover {
+    background-color:blue;
+}
+
+body {
+    background-image: url("assets/background.jpg");
+}
+
+.score-wrapper {
+    margin-top: 200px;
+    text-align: center;
+}
