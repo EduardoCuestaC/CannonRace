@@ -602,6 +602,24 @@ function render() {
 	obj8.position.y = 20;
 	obj8.position.z = obstacles[7].z;
 
+	//ROTATION ASTEROIDS
+	obj1.rotation.x += .02;
+
+	obj2.rotation.x += .01;
+
+	obj3.rotation.z += .02;
+
+	obj4.rotation.z += .01;
+
+	obj5.rotation.z += .01;
+
+	obj6.rotation.x += .02;
+
+	obj7.rotation.z += .03;
+
+	obj8.rotation.x += .03;
+
+
 	cameraControls.target.set(0, 10, racer.z);
 	cameraControls.update(delta);
 	renderer.render(scene, camera);
