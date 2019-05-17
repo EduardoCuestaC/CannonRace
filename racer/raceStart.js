@@ -13,6 +13,7 @@ var hud;
 var ship;
 var scores = [];
 var frameId;
+var obj1, obj2, obj3, obj4, obj5, obj6, obj7, obj8;
 
 class sound {
 	constructor(src) {
@@ -89,10 +90,11 @@ class Boost {
 	}
 
 	relocate(z) {
-		this.root.position.x = Math.floor(Math.random() * 401) - 200;
+		var x = Math.floor(Math.random() * 401) - 200;
+		this.root.position.x = x;
 		this.root.position.y = 0;
 		this.root.position.z = z - 4000;
-		this.x = Math.floor(Math.random() * 401) - 200;
+		this.x = x;
 		this.y = 0;
 		this.z = z - 4000;
 	}
@@ -109,7 +111,8 @@ class Obstacle {
 		this.height = 20;
 
 		let material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), material);
+		material.visible = false;
+		let box = new THREE.Mesh(new THREE.SphereGeometry( 20, 50, 50 ), material);
 
 		this.root.add(box);
 		this.root.position.x = x;
@@ -134,11 +137,11 @@ class Obstacle {
 	}
 
 	relocate(z) {
-		this.root.position.x = Math.floor(Math.random() * 401) - 200;
+		var x = Math.floor(Math.random() * 401) - 200;
+		this.root.position.x = x;
 		this.root.position.y = 0;
 		this.root.position.z = z - 4000;
-
-		this.x = Math.floor(Math.random() * 401) - 200;
+		this.x = x;
 		this.y = 0;
 		this.z = z - 4000;
 	}
@@ -158,12 +161,12 @@ class Racer {
 		this.root = new THREE.Group();
 		scene.add(this.root);
 
-		this.width = 50;
+		this.width = 120;
 		this.height = 10;
-		this.length = 180;
+		this.length = 200;
 
 		let materialShip = new THREE.MeshPhongMaterial({ color: 0xd2d8e0 });
-		materialShip.visible = false;
+		materialShip.visible = true;
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
 
 		//this.root.add(box);
@@ -269,6 +272,105 @@ function fillScene() {
 			ship = object;
 			scene.add(object);
 			console.log("loaded");
+		});
+
+	});
+
+	// Asteroid model load
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setResourcePath('assets/environment/');
+	mtlLoader.setPath('assets/environment/');
+	mtlLoader.load('asteroid.mtl', function (materials) {
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj1 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj2 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj3 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj4 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj5 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj6 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj7 = object;
+			scene.add(object);
+		});
+
+		objLoader.load('assets/environment/asteroid.obj', function (object) {
+
+			object.position.set(10, 20, -4000);
+			object.scale.x = .03;
+			object.scale.y = .03;
+			object.scale.z = .03;
+			object.rotation.y = Math.PI * -1;
+			obj8 = object;
+			scene.add(object);
 		});
 
 	});
@@ -466,6 +568,38 @@ function render() {
 			obstacle.relocate(racer.z)
 		}
 	}
+
+	obj1.position.x = obstacles[0].x;
+	obj1.position.y = 20;
+	obj1.position.z = obstacles[0].z;
+
+	obj2.position.x = obstacles[1].x;
+	obj2.position.y = 20;
+	obj2.position.z = obstacles[1].z;
+
+	obj3.position.x = obstacles[2].x;
+	obj3.position.y = 20;
+	obj3.position.z = obstacles[2].z;
+
+	obj4.position.x = obstacles[3].x;
+	obj4.position.y = 20;
+	obj4.position.z = obstacles[3].z;
+
+	obj5.position.x = obstacles[4].x;
+	obj5.position.y = 20;
+	obj5.position.z = obstacles[4].z;
+
+	obj6.position.x = obstacles[5].x;
+	obj6.position.y = 20;
+	obj6.position.z = obstacles[5].z;
+
+	obj7.position.x = obstacles[6].x;
+	obj7.position.y = 20;
+	obj7.position.z = obstacles[6].z;
+
+	obj8.position.x = obstacles[7].x;
+	obj8.position.y = 20;
+	obj8.position.z = obstacles[7].z;
 
 	cameraControls.target.set(0, 10, racer.z);
 	cameraControls.update(delta);
