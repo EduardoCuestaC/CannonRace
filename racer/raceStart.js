@@ -225,33 +225,6 @@ class HUD {
 	}
 }
 
-function init() {
-	// Stop intro music
-	intro.stop();
-
-	var canvasWidth = window.innerWidth;
-	var canvasHeight = window.innerHeight;
-	var canvasRatio = canvasWidth / canvasHeight;
-
-	// RENDERER
-	renderer = new THREE.WebGLRenderer({ antialias: true });
-
-	renderer.gammaInput = true;
-	renderer.gammaOutput = true;
-	renderer.setSize(canvasWidth, canvasHeight);
-	renderer.setClearColor(0xAAAAAA, 1.0);
-
-	// CAMERA
-	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 4000);
-	// CONTROLS
-	cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-	camera.position.set(0, 100, +500);
-	cameraControls.target.set(0, 100, 0);
-
-	clock = new THREE.Clock()
-
-}
-
 function fillScene() {
 
 	// FOG
@@ -331,20 +304,104 @@ function fillScene() {
 
 
 	hud = new HUD(racer);
-	/*	var loader = new THREE.FontLoader();
+}
 
-		loader.load( 'helv.typeface.json', function ( font ) {
-			var geometry = new THREE.TextGeometry( 'Hello three.js!', {
-				font: font,
-				size: 80,
-				height: 5,
-				curveSegments: 12,
-				bevelEnabled: true,
-				bevelThickness: 10,
-				bevelSize: 8,
-				bevelSegments: 5
-			} );
-		} );*/
+function init() {
+
+	var canvasWidth = window.innerWidth;
+	var canvasHeight = window.innerHeight;
+	var canvasRatio = canvasWidth / canvasHeight;
+
+	// RENDERER
+	renderer = new THREE.WebGLRenderer({ antialias: true });
+
+	renderer.gammaInput = true;
+	renderer.gammaOutput = true;
+	renderer.setSize(canvasWidth, canvasHeight);
+	renderer.setClearColor(0xAAAAAA, 1.0);
+
+	// CAMERA
+	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 4000);
+	// CONTROLS
+	cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+	camera.position.set(0, 100, +500);
+	cameraControls.target.set(0, 100, 0);
+
+	clock = new THREE.Clock()
+
+}
+
+function terminate() {
+	// Stop soundtrack
+	background.stop();
+	fly.stop();
+
+	// Play gameover
+	gameover.play();
+
+	window.cancelAnimationFrame(frameId);
+	scores.push(hud.score);
+	scores.sort((a, b) => b - a);
+
+	var screen = document.getElementById('screen');
+	screen.innerHTML = "";
+
+	let wr = document.createElement("div");
+	wr.classList.add("score-wrapper");
+	screen.appendChild(wr);
+
+	let txt = document.createElement("div");
+	txt.innerText = "Last score: " + hud.score;
+	txt.classList.add("score-text");
+	wr.appendChild(txt);
+
+	let listHead = document.createElement("div");
+	listHead.innerText = "All scores:";
+	listHead.classList.add("score-text");
+	wr.appendChild(listHead);
+
+	let scoreList = document.createElement("ul");
+	scoreList.classList.add("score-list");
+
+	for (let score of scores) {
+		let item = document.createElement("li");
+		item.textContent = score;
+		item.classList.add("score-item");
+		scoreList.appendChild(item);
+	}
+
+	wr.appendChild(scoreList);
+
+	let bplay = document.createElement("button");
+	bplay.innerText = "Play again";
+	bplay.classList.add("play-again-button");
+
+	bplay.onclick = function () {
+		screen.innerHTML = "" +
+			"<div class=\"score-text\" id=\"time\"></div>\n" +
+			"    <div class=\"score-text\" id=\"speed\"></div>\n" +
+			"    <div class=\"score-text\" id=\"life\"></div>\n" +
+			"    <div class=\"score-text\" id=\"points\"></div>\n" +
+			"    <div id=\"canvas\">\n" +
+			"        <script src=\"racerStart.js\"> </script>\n" +
+			"    </div>" +
+			"";
+
+		try {
+
+			init();
+			fillScene();
+			addToDOM();
+			animate();
+
+		} catch (error) {
+			console.log("Your program encountered an unrecoverable error, can not draw on screen. Error was:");
+			console.log(error);
+		}
+
+	};
+
+	wr.appendChild(bplay);
 }
 
 function addToDOM() {
@@ -414,80 +471,6 @@ function render() {
 	renderer.render(scene, camera);
 	hud.update();
 	hud.render();
-}
-
-function terminate() {
-	// Stop soundtrack
-	background.stop();
-	fly.stop();
-
-	// Play gameover
-	gameover.play();
-
-	window.cancelAnimationFrame(frameId);
-	scores.push(hud.score);
-	scores.sort((a, b) => b - a);
-
-	var screen = document.getElementById('screen');
-	screen.innerHTML = "";
-
-	let wr = document.createElement("div");
-	wr.classList.add("score-wrapper");
-	screen.appendChild(wr);
-
-	let txt = document.createElement("div");
-	txt.innerText = "Last score: " + hud.score;
-	txt.classList.add("score-text");
-	wr.appendChild(txt);
-
-
-	let listHead = document.createElement("div");
-	listHead.innerText = "All scores:";
-	listHead.classList.add("score-text");
-	wr.appendChild(listHead);
-
-	let scoreList = document.createElement("ul");
-	scoreList.classList.add("score-list");
-
-	for (let score of scores) {
-		let item = document.createElement("li");
-		item.textContent = score;
-		item.classList.add("score-item");
-		scoreList.appendChild(item);
-	}
-
-	wr.appendChild(scoreList);
-
-	let bplay = document.createElement("button");
-	bplay.innerText = "Play again";
-	bplay.classList.add("play-again-button");
-
-	bplay.onclick = function () {
-		screen.innerHTML = "" +
-			"<div class=\"score-text\" id=\"time\"></div>\n" +
-			"    <div class=\"score-text\" id=\"speed\"></div>\n" +
-			"    <div class=\"score-text\" id=\"life\"></div>\n" +
-			"    <div class=\"score-text\" id=\"points\"></div>\n" +
-			"    <div id=\"canvas\">\n" +
-			"        <script src=\"racerStart.js\"> </script>\n" +
-			"    </div>" +
-			"";
-
-		try {
-
-			init();
-			fillScene();
-			addToDOM();
-			animate();
-
-		} catch (error) {
-			console.log("Your program encountered an unrecoverable error, can not draw on screen. Error was:");
-			console.log(error);
-		}
-
-	};
-
-	wr.appendChild(bplay);
 }
 
 try {
