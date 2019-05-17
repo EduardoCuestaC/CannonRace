@@ -66,7 +66,7 @@ class Boost {
 		this.length = 40;
 		this.height = 2;
 
-		let materialShip = new THREE.MeshPhongMaterial({ color: 0x222222 });
+		let materialShip = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
 		let box = new THREE.Mesh(new THREE.BoxBufferGeometry(this.width, this.height, this.length), materialShip);
 
 		this.root.add(box);
@@ -151,7 +151,7 @@ class Obstacle {
 var crash = new sound("assets/sounds/crash.mp3");
 var speedup = new sound("assets/sounds/boost.mp3");
 var fly = new soundloop("assets/sounds/fly.mp3");
-var background = new soundloop("assets/sounds/soundtrack.mp3")
+var background = new soundloop("assets/sounds/soundtrack.mp3");
 var gameover = new soundloop("assets/sounds/gameover.mp3");
 var death = new sound("assets/sounds/death.mp3");
 
@@ -183,11 +183,11 @@ class Racer {
 	}
 
 	move(x, y, z) {
-		this.root.position.x += (x + speed / 5);
+		this.root.position.x += x*Math.min(this.speed , 50)/8;
 		this.root.position.y += y;
 		this.root.position.z += z;
 
-		this.x += (x + speed / 5);
+		this.x += x*Math.min(this.speed , 50)/8;
 		this.y += y;
 		this.z += z;
 	}
@@ -230,7 +230,7 @@ function fillScene() {
 	// FOG
 	scene = new THREE.Scene();
 	scene.fog = new THREE.Fog(0x808080, 2000, 4000);
-	scene.background = new THREE.Color( 0x000000 );
+	//scene.background = new THREE.Color( 0x000000 );
 
 	// LIGHTS
 	scene.add(new THREE.AmbientLight(0x222222));
@@ -413,12 +413,12 @@ function init() {
 	var canvasRatio = canvasWidth / canvasHeight;
 
 	// RENDERER
-	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer = new THREE.WebGLRenderer({ antialias: true , alpha: true});
 
 	renderer.gammaInput = true;
 	renderer.gammaOutput = true;
 	renderer.setSize(canvasWidth, canvasHeight);
-	renderer.setClearColor(0xAAAAAA, 1.0);
+	//renderer.setClearColor(0xAAAAAA, 1.0);
 
 	// CAMERA
 	camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 4000);
@@ -524,13 +524,17 @@ function render() {
 	ship.position.z = racer.z;
 	ship.position.y = racer.y;
 
-	if (kb.pressed("A"))
-		if (racer.x > -200)
-			racer.move(-6, 0, 0);
+	if (kb.pressed("A")){
+		if (racer.x > -200){
+			racer.move(-1, 0, 0);
+		}
+	}
 
-	if (kb.pressed("D"))
-		if (racer.x < 200)
-			racer.move(6, 0, 0);
+	if (kb.pressed("D")) {
+		if (racer.x < 200){
+			racer.move(1, 0, 0);
+		}
+	}
 
 	for (let boost of boosts) {
 		if (boost.intersects(racer)) {
@@ -622,6 +626,7 @@ function render() {
 	renderer.render(scene, camera);
 	hud.update();
 	hud.render();
+
 }
 
 try {

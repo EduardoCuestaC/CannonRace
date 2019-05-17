@@ -97,9 +97,9 @@
     background-color: #d418d4;
 }
 
-/* body {
-    background-image: url("assets/end.jpg");
-} */
+body {
+    background-image: url("assets/background.jpg");
+}
 
 .score-wrapper {
     margin-top: 200px;
