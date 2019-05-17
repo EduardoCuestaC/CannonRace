@@ -8,7 +8,7 @@ var racer;
 var kb = new KeyboardState();
 var boosts = [];
 var obstacles = [];
-var plane;
+var ship;
 var hud;
 var objetito;
 var scores = [];
@@ -146,7 +146,7 @@ class Racer {
 		this.z -= this.speed;
 
 		camera.position.z -= racer.speed;
-		plane.position.z -= racer.speed;
+		ship.position.z -= racer.speed;
 	}
 }
 
@@ -169,7 +169,7 @@ class HUD {
 
 	render() {
 		document.getElementById("time").innerHTML = "Time (s): " + this.time;
-		document.getElementById("speed").innerHTML = "Current Speed: " + this.racer.speed;
+		document.getElementById("speed").innerHTML = "Current Speed: " + (this.racer.speed * 10) + "km/h";
 		document.getElementById("life").innerHTML = "Hull Integrity: " + this.racer.life + "%";
 		document.getElementById("points").innerHTML = "Points: " + this.points;
 	}
@@ -223,13 +223,13 @@ function fillScene() {
 
 	});
 
-	let planeGeometry = new THREE.PlaneGeometry(5000, 5000);
-	let planeMaterial = new THREE.MeshBasicMaterial({ color: 0x689bed });
+	let shipGeometry = new THREE.shipGeometry(5000, 5000);
+	let shipMaterial = new THREE.MeshBasicMaterial({ color: 0x689bed });
 
-	plane = new THREE.Mesh(planeGeometry, planeMaterial);
-	plane.rotateX(-Math.PI / 2);
-	plane.position.z = -500;
-	scene.add(plane);
+	ship = new THREE.Mesh(shipGeometry, shipMaterial);
+	ship.rotateX(-Math.PI / 2);
+	ship.position.z = -500;
+	scene.add(ship);
 
 
 	racer = new Racer(0, 10, 0);
