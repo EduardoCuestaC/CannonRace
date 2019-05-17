@@ -108,9 +108,9 @@ class Racer {
 		this.root = new THREE.Group();
 		scene.add(this.root);
 
-		this.width = 100;
+		this.width = 30;
 		this.height = 20;
-		this.length = 100;
+		this.length = 200;
 
 		let materialShip = new THREE.MeshPhongMaterial({ color: 0x35ff3f });
 		materialShip.transparent = true;
@@ -364,11 +364,11 @@ function render() {
 
 	if (kb.pressed("A"))
 		if (racer.x > -200)
-			racer.move(-2, 0, 0);
+			racer.move(-6, 0, 0);
 
 	if (kb.pressed("D"))
 		if (racer.x < 200)
-			racer.move(2, 0, 0);
+			racer.move(6, 0, 0);
 
 	for (let boost of boosts) {
 		if (boost.intersects(racer)) {
