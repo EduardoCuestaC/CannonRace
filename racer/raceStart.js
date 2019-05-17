@@ -137,7 +137,7 @@ class Obstacle {
 	}
 
 	relocate(z) {
-		var x = Math.floor(Math.random() * 801) - 50;
+		var x = Math.floor(Math.random() * 401) - 200;
 		this.root.position.x = x;
 		this.root.position.y = 0;
 		this.root.position.z = z - 5000;
@@ -161,7 +161,7 @@ class Racer {
 		this.root = new THREE.Group();
 		scene.add(this.root);
 
-		this.width = 50;
+		this.width = 140;
 		this.height = 10;
 		this.length = 200;
 
