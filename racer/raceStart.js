@@ -113,49 +113,49 @@ class Boost {
 
 class Obstacle {
 
-  constructor(x, y, z) {
-      this.root = new THREE.Group();
-      scene.add(this.root);
+    constructor(x, y, z) {
+    this.root = new THREE.Group();
+    scene.add(this.root);
 
-      this.width = 6;
-      this.length = 10;
-      this.height = 20;
+    this.width = 6;
+    this.length = 10;
+    this.height = 20;
 
-      let material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-      material.visible = false;
-      let box = new THREE.Mesh(new THREE.SphereGeometry( 10, 50, 50 ), material);
+    let material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+    material.visible = false;
+    let box = new THREE.Mesh(new THREE.SphereGeometry( 10, 50, 50 ), material);
 
-      this.root.add(box);
-      this.root.position.x = x;
-      this.root.position.y = y;
-      this.root.position.z = z;
+    this.root.add(box);
+    this.root.position.x = x;
+    this.root.position.y = y;
+    this.root.position.z = z;
 
-      this.x = x;
-      this.y = y;
-      this.z = z;
-  }
+    this.x = x;
+    this.y = y;
+    this.z = z;
+}
 
-  intersects(racer) {
-      let sright = this.root.position.x + this.width / 2;
-      let sleft = this.root.position.x - this.width / 2;
-      let stop = this.root.position.z - this.length / 2;
-      let sbot = this.root.position.z + this.length / 2;
+intersects(racer) {
+    let sright = this.root.position.x + this.width / 2;
+    let sleft = this.root.position.x - this.width / 2;
+    let stop = this.root.position.z - this.length / 2;
+    let sbot = this.root.position.z + this.length / 2;
 
-      return (sleft < racer.x + racer.width / 2)
-          && (sright > racer.x - racer.width / 2)
-          && (stop < racer.z + racer.length / 2)
-          && (sbot > racer.z - racer.length / 2);
-  }
+    return (sleft < racer.x + racer.width / 2)
+        && (sright > racer.x - racer.width / 2)
+        && (stop < racer.z + racer.length / 2)
+        && (sbot > racer.z - racer.length / 2);
+}
 
-  relocate(z) {
-      var x = Math.floor(Math.random() * 801) - 50;
-      this.root.position.x = x;
-      this.root.position.y = 0;
-      this.root.position.z = z - 5000;
-      this.x = x;
-      this.y = 0;
-      this.z = z - 5000;
-  }
+relocate(z) {
+    var x = Math.floor(Math.random() * 401) - 200;
+    this.root.position.x = x;
+    this.root.position.y = 0;
+    this.root.position.z = z - 5000;
+    this.x = x;
+    this.y = 0;
+    this.z = z - 5000;
+}
 }
 
 // Initilizes sounds
@@ -172,9 +172,9 @@ class Racer {
       this.root = new THREE.Group();
       scene.add(this.root);
 
-      this.width = 50;
-      this.height = 10;
-      this.length = 200;
+        this.width = 140;
+        this.height = 10;
+        this.length = 200;
 
       let materialShip = new THREE.MeshPhongMaterial({ color: 0xd2d8e0 });
       materialShip.visible = true;
